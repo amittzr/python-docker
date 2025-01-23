@@ -1,31 +1,23 @@
-name: Build and Push Docker Image
+name: Docker Image CI
 
 on:
   push:
-    branches:
-      - main  # Trigger this workflow on pushes to the "main" branch
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
-  build-and-push:
+
+  build:
+
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Check out the code
-      - name: Check out code
-        uses: actions/checkout@v3
-
-      # Step 2: Log in to Docker Hub
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-      # Step 3: Build the Docker image
-      - name: Build Docker Image
-        run: docker build -t <your-dockerhub-username>/<image-name>:latest .
-
-      # Step 4: Push Docker image to Docker Hub
-      - name: Push Docker Image
-        run: docker push <your-dockerhub-username>/<image-name>:latest
-
+    - uses: actions/checkout@v4
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag amittz98/webapp:${{ github.run_number }}-${GITHUB_SHA}
+    - name: docker login
+      run: docker login -u ${{ secrets.SECRET_USER }} -p ${{ secrets.SECRET_PASS }}
+    - name: docker push
+      run: docker push amittz98/devpy:${{ github.run_number }}-${GITHUB_SHA}
