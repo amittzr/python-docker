@@ -14,10 +14,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    # Checkout the code
     - uses: actions/checkout@v4
+
+    # Build the Docker image
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag amittz98/img-dev:${{ github.run_number }}-${GITHUB_SHA}
-    - name: docker login
+      run: docker build . --file Dockerfile --tag amittz98/img-dev:${{ github.run_number }}-${{ github.sha }}
+
+    # Tag the image (optional step for latest tag)
+    - name: Tag Docker image as latest
+      run: docker tag amittz98/img-dev:${{ github.run_number }}-${{ github.sha }} amittz98/img-dev:latest
+
+    # Login to Docker Hub
+    - name: Login to Docker Hub
       run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-    - name: docker push
-      run: docker push amittz98/img-dev:${{ github.run_number }}-${GITHUB_SHA}
+
+    # Push both tags to Docker Hub
+    - name: Push Docker images to Docker Hub
+      run: |
+        docker push amittz98/img-dev:${{ github.run_number }}-${{ github.sha }}
+        docker push amittz98/img-dev:latest
