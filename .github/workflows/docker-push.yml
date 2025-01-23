@@ -18,6 +18,6 @@ jobs:
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag amittz98/webapp:${{ github.run_number }}-${GITHUB_SHA}
     - name: docker login
-      run: docker login -u ${{ secrets.SECRET_USER }} -p ${{ secrets.SECRET_PASS }}
+      run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
     - name: docker push
       run: docker push amittz98/devpy:${{ github.run_number }}-${GITHUB_SHA}
