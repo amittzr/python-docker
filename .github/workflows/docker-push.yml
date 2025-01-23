@@ -16,8 +16,8 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag amittz98/devpy:${{ github.run_number }}-${GITHUB_SHA}
+      run: docker build . --file Dockerfile --tag amittz98/img-dev:${{ github.run_number }}-${GITHUB_SHA}
     - name: docker login
       run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
     - name: docker push
-      run: docker push amittz98/devpy:${{ github.run_number }}-${GITHUB_SHA}
+      run: docker push amittz98/img-dev:${{ github.run_number }}-${GITHUB_SHA}
